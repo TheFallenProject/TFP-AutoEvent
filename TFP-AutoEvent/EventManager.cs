@@ -1,12 +1,10 @@
-﻿using PlayerRoles;
-using PlayerRoles.PlayableScps.Scp096;
+﻿using MEC;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Utils.NonAllocLINQ;
 
 namespace TFP_AutoEvent
@@ -76,57 +74,54 @@ namespace TFP_AutoEvent
             try
             {
                 activeEvent.Ended -= EventCleanup;
-            } catch (NullReferenceException) { }
+            }
+            catch (NullReferenceException) { }
             activeEvent = null;
+        }
+
+        public static IEnumerator<float> LaunchCoroutine(IEvent ev)
+        {
+
+            activeEvent = ev;
+            int secs = 15;
+            ev.PreLaunch();
+
+            while (secs > 0)
+            {
+                string secondsWord = "";
+                if (secs == 1)
+                    secondsWord = "секунда";
+                if (secs > 1 && secs < 5)
+                    secondsWord = "секунды";
+                if (secs >= 5 && secs < 21)
+                    secondsWord = "секунд";
+                else
+                {
+                    int rem10 = secs % 10;
+                    if (rem10 == 1)
+                        secondsWord = "секунда";
+                    else if (rem10 > 1 && rem10 < 5)
+                        secondsWord = "секунды";
+                    else
+                        secondsWord = "секунд";
+                }
+                foreach (var player in Exiled.API.Features.Player.List)
+                {
+                    // TODO: Add colors and stuff
+                    player.ShowHint($"Выбран ивент: {EventName}, до начала {secs} {secondsWord}\nИвент вкратце: {ShortDescription}\n\nПодробные правила можно узнать через команду .правила в консоли на [ё].", 2);
+                }
+                yield return Timing.WaitForSeconds(1f);
+                secs -= 1;
+            }
+
+            ev.Engage();
         }
 
         public static void LaunchEvent(IEvent ev)
         {
             if (activeEvent is null)
             {
-                Task.Run(async () =>
-                {
-                    try
-                    {
-                        activeEvent = ev;
-                        int secs = 15;
-                        ev.PreLaunch();
-
-                        while (secs > 0)
-                        {
-                            string secondsWord = "";
-                            if (secs == 1)
-                                secondsWord = "секунда";
-                            if (secs > 1 && secs < 5)
-                                secondsWord = "секунды";
-                            if (secs >= 5 && secs < 21)
-                                secondsWord = "секунд";
-                            else
-                            {
-                                int rem10 = secs % 10;
-                                if (rem10 == 1)
-                                    secondsWord = "секунда";
-                                else if (rem10 > 1 && rem10 < 5)
-                                    secondsWord = "секунды";
-                                else
-                                    secondsWord = "секунд";
-                            }
-                            foreach (var player in Exiled.API.Features.Player.List)
-                            {
-                                // TODO: Add colors and stuff
-                                player.ShowHint($"Выбран ивент: {EventName}, до начала {secs} {secondsWord}\nИвент вкратце: {ShortDescription}\n\nПодробные правила можно узнать через команду .правила в консоли на [ё].", 2);
-                            }
-                            await Task.Delay(1000);
-                            secs -= 1;
-                        }
-
-                        ev.Engage();
-                    }
-                    catch (Exception ex)
-                    {
-                        Exiled.API.Features.Log.Error($"oops ({ex})");
-                    }
-                });
+                Timing.RunCoroutine(LaunchCoroutine(ev));
             }
             else
             {
