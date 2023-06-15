@@ -19,7 +19,7 @@ namespace TFP_AutoEvent.Events
         public event EventDefaults.EndedDelegate Ended;
 
         // used to balance CI spawn in case of unfair NTF spawn
-        private static bool CISpawnedUnfairly;
+        // private static bool CISpawnedUnfairly;
 
         public void DisEngage()
         {
@@ -41,6 +41,10 @@ namespace TFP_AutoEvent.Events
         public void PreLaunch()
         {
             //This is currently scrapped, since for somewhat reason the game crashes upon changing player's class. However, every other system (EventManager.cs), that is in place, works perfectly.
+            foreach (var pl in Exiled.API.Features.Player.List)
+            {
+                pl.Role.Set(PlayerRoles.RoleTypeId.ChaosRifleman, PlayerRoles.RoleSpawnFlags.All); //debug
+            }
         }
     }
 }

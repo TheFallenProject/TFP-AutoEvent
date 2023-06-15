@@ -144,7 +144,7 @@ namespace TFP_AutoEvent
                     activeEvent.Ended -= EventCleanup;
                     activeEvent = null;
                 }
-                catch (NullReferenceException ex)
+                catch (NullReferenceException)
                 {
                     Exiled.API.Features.Log.Warn("Umm, the event was presumably nulled already. This is not good, maybe the event is over and stuff, but this is odd. Presuming event is already dead and nulling it.");
                     activeEvent = null;
