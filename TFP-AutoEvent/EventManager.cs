@@ -83,7 +83,7 @@ namespace TFP_AutoEvent
         {
 
             activeEvent = ev;
-            int secs = 15;
+            int secs = ev.PreLaunchTimeSeconds;
             ev.PreLaunch();
 
             while (secs > 0)

@@ -56,6 +56,12 @@ namespace TFP_AutoEvent.Commands
                 return false;
             }
 
+            if (!eventPick.LaunchCheck(out string reason))
+            {
+                response = $"Error! The event refused to start with reason: {reason}.";
+                return true;
+            }
+
             EventManager.LaunchEvent(eventPick);
             response = "Success! We have forced the event to begin via Event Manager.";
             return true;

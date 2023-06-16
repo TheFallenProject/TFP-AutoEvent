@@ -117,13 +117,15 @@
     <Compile Include="Config.cs" />
     <Compile Include="CustomRoles\NTFUnit.cs" />
     <Compile Include="EventManager.cs" />
-    <Compile Include="Events\FG.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Events\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

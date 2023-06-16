@@ -34,6 +34,11 @@ namespace TFP_AutoEvent
         int EventWeighting { get; set; }
 
         /// <summary>
+        /// How long should rules-display last? Please do not make it over the top.
+        /// </summary>
+        int PreLaunchTimeSeconds { get; set; }
+
+        /// <summary>
         /// The event in 30 or less words total. Displays the rules before launching.
         /// </summary>
         string ShortRulesDescription { get; set; }
